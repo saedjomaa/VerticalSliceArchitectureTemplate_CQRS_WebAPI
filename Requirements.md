@@ -104,6 +104,8 @@ Technical facts specific to this project. `AGENTS.md` is generic and refers to t
 - Modules: `Students`, `Courses`, `Enrollments`, `JsonPlaceholder`.
 - Database provider: SQLite, connection string `School` = `Data Source=school.db;Foreign Keys=True` (file created next to the WebAPI project). Primary-key violations are detected by SQLite extended error code `1555` in `WebAPI/Database/SqliteErrors.cs`, used by the `EnrollStudent` slice.
 - Solution file: `VerticalSliceArchitectureTemplate_CQRS_WebAPI.slnx`.
+- Tools: `dotnet-ef` 11.0.0 as a local tool (`dotnet-tools.json`; run `dotnet tool restore` after cloning).
+- `school.db` (and its `-shm` / `-wal` files) is local only: ignored by `.gitignore` and not tracked in git. Each developer's database is created by the migrations on first run.
 - External service `[Service]` = `JsonPlaceholder`: `Features/JsonPlaceholder/Client/` (`IJsonPlaceholderClient`, `JsonPlaceholderClient`), registered by `JsonPlaceholderModule`; settings `ExternalServices:JsonPlaceholder:BaseUrl` = `https://jsonplaceholder.typicode.com/`. Shared timeout for all external services: `ExternalServices:TimeoutSeconds` = 10.
 - The existing migrations were moved from `Infrastructure/Persistence/Migrations` to `WebAPI/Database/Migrations`; only their C# namespace changed (migration IDs and contents are the same, so existing databases are not affected).
 - Known exception: migration `20261120061000_InitialSchool` was written by hand and has no `.Designer.cs` file. Do not copy that style; create new migrations with the EF Core CLI.

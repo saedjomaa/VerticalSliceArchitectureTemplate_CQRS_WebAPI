@@ -84,8 +84,11 @@ WebAPI/
 - Enforce uniqueness in the database (keys or unique indexes), not only in handlers.
 
 ## Migrations
+- The EF Core CLI (`dotnet-ef`) is a local tool pinned in `dotnet-tools.json` at the repository root. Run `dotnet tool restore` once after cloning; do not rely on a global install.
 - Create migrations with the EF Core CLI only, from the repository root:
   `dotnet ef migrations add <Name> --project WebAPI --output-dir Database/Migrations`
+- Check for pending model changes after any change to entities or configurations:
+  `dotnet ef migrations has-pending-model-changes --project WebAPI`
 - Do not hand-write new migrations and do not edit a migration that has already been applied. Change the model, then add a new migration, and check that it preserves existing data.
 - Seed data lives in `[Project]Seed`. Changing it requires a new migration.
 - Known exceptions to these rules (e.g. an old hand-written migration) are listed in `Requirements.md`. Do not copy their style.
