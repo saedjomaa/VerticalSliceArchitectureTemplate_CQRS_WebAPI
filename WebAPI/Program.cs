@@ -1,8 +1,7 @@
-using Application;
-using Infrastructure;
 using Scalar.AspNetCore;
 using Serilog;
-using WebAPI.Diagnostics;
+using WebAPI;
+using WebAPI.Common.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,8 +16,8 @@ builder.Services.AddProblemDetails(options =>
     options.CustomizeProblemDetails = context =>
         context.ProblemDetails.Extensions["correlationId"] = context.HttpContext.TraceIdentifier);
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-builder.Services.AddApplication();
-builder.Services.AddInfrastructure(
+builder.Services.AddFeatures();
+builder.Services.AddDatabase(
     builder.Configuration.GetConnectionString("School")
     ?? throw new InvalidOperationException("The School connection string is required."),
     builder.Configuration.GetValue<bool>("Database:EnableSensitiveDataLogging"));

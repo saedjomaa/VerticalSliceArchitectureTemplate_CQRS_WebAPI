@@ -99,10 +99,12 @@ Applied by migrations on startup:
 
 ## Project Notes
 Technical facts specific to this project. `AGENTS.md` is generic and refers to these through placeholders.
-- Architecture: Clean Architecture + CQRS with `IApplicationDbContext` (no repositories).
-- `[Project]` = `School`: `SchoolDbContext` (implements `IApplicationDbContext`), `SchoolSeed`.
-- Database provider: SQLite, connection string `School` = `Data Source=school.db;Foreign Keys=True` (file created next to the WebAPI project). Primary-key violations are detected by SQLite extended error code `1555` in `SchoolDbContext.TrySaveEnrollmentAsync`.
-- Solution file: `CleanArchitectureTemplate_CQRS_IApplicationDbContext.slnx`.
-- External service `[Service]` = `JsonPlaceholder`: `IJsonPlaceholderClient`, `JsonPlaceholderClient`, settings `ExternalServices:JsonPlaceholder:BaseUrl` = `https://jsonplaceholder.typicode.com/`. Shared timeout for all external services: `ExternalServices:TimeoutSeconds` = 10.
+- Architecture: Vertical Slice Architecture + CQRS, two projects (`Domain`, `WebAPI`). Handlers use `SchoolDbContext` directly (no repositories, no `DbContext` interface); controllers stay, one per module inside `WebAPI/Features/[Module]/`. Converted from `CleanArchitectureTemplate_CQRS_IApplicationDbContext`; behavior and endpoints are unchanged.
+- `[Project]` = `School`: `SchoolDbContext`, `SchoolSeed` (in `WebAPI/Database`).
+- Modules: `Students`, `Courses`, `Enrollments`, `JsonPlaceholder`.
+- Database provider: SQLite, connection string `School` = `Data Source=school.db;Foreign Keys=True` (file created next to the WebAPI project). Primary-key violations are detected by SQLite extended error code `1555` in `WebAPI/Database/SqliteErrors.cs`, used by the `EnrollStudent` slice.
+- Solution file: `VerticalSliceArchitectureTemplate_CQRS_WebAPI.slnx`.
+- External service `[Service]` = `JsonPlaceholder`: `Features/JsonPlaceholder/Client/` (`IJsonPlaceholderClient`, `JsonPlaceholderClient`), registered by `JsonPlaceholderModule`; settings `ExternalServices:JsonPlaceholder:BaseUrl` = `https://jsonplaceholder.typicode.com/`. Shared timeout for all external services: `ExternalServices:TimeoutSeconds` = 10.
+- The existing migrations were moved from `Infrastructure/Persistence/Migrations` to `WebAPI/Database/Migrations`; only their C# namespace changed (migration IDs and contents are the same, so existing databases are not affected).
 - Known exception: migration `20261120061000_InitialSchool` was written by hand and has no `.Designer.cs` file. Do not copy that style; create new migrations with the EF Core CLI.
 - EF Core sensitive data logging is **enabled in all environments** (`Database:EnableSensitiveDataLogging = true` in `appsettings.json`), by the project owner's decision. Log files therefore contain SQL parameter values such as student names. To disable it in one environment, set it to `false` in `appsettings.{Environment}.json`.

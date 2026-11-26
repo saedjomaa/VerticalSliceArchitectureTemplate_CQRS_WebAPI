@@ -4,8 +4,6 @@
     <File Path="Directory.Build.props" />
     <File Path="Requirements.md" />
   </Folder>
-  <Project Path="Application/Application.csproj" Id="93bf2595-936f-43ef-a4d5-39e830b74988" />
   <Project Path="Domain/Domain.csproj" Id="d0878416-53f1-448c-856d-2508ad5cfb1a" />
-  <Project Path="Infrastructure/Infrastructure.csproj" Id="875ceb91-54cd-45a0-94cb-ff1e22980327" />
   <Project Path="WebAPI/WebAPI.csproj" Id="0ade2cc7-075e-480a-9740-0bb7fc5e632b" />
 </Solution>
